@@ -1,4 +1,4 @@
-Message Key, Message Value, Meaning, Producer
-PartScan, Arrived, Hanger ID arrived and scan sarted, Part scanner
-PartScan, Ready, Part with hanger ID is scanned and cloud point file saved to shared volume, Part scanner
+Message Key, Message Value [id], Message Value [value], Meaning, Producer
+PartScan, Hanger ID, Arrived, Hanger ID arrived and scan started, Part scanner
+PartScan, Hanger ID, Ready, Parts on hanger ID are scanned and cloud point file saved to shared volume, Part scanner
 
