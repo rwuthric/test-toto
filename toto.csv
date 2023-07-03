@@ -1,3 +1,3 @@
-Message Key, Message Value, Producer
-Micro-service UUIS, JSON, Micro-service
+Message Key, Message Value, Meaning, Producer
+PartScan, Ready, Part with hanger ID is scanned and cloud point file saved to shared volume, Part scanner
 
