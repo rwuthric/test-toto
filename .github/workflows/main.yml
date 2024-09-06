@@ -1,15 +1,19 @@
 name: Save Commit Hash to Repo
 
 on:
-  [workflow_dispatch]
+  push:
+    branches:
+      - main
 
 jobs:
   save-commit-hash:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code with PAT
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ACTIONS_PAT }}
 
       - name: Get latest commit hash
         id: get_commit_hash
@@ -24,9 +28,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
       - name: Commit and push the commit hash file
-        env:
-          PAT: ${{ secrets.ACTIONS_PAT }}
         run: |
           git add commit_hash.txt
           git commit -m "Save latest commit hash"
-          git push https://x-access-token:${PAT}@github.com/${{ github.repository }} HEAD:main
+          git push origin HEAD:main
