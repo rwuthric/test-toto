@@ -2,3 +2,4 @@ Message Key, Message Value [id], Message Value [value], Meaning, Producer
 PartScan, Hanger ID, Arrived, Hanger ID arrived and scan started, Part scanner
 PartScan, Hanger ID, Ready, Parts on hanger ID are scanned and cloud point file saved to shared volume, Part scanner
 PartScan, Hanger ID, Fail, Parts on hanger ID could not be scanned and no cloud point file was saved to shared volume, Part scanner
+d
