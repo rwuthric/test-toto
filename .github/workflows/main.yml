@@ -1,9 +1,7 @@
 name: Save Commit Hash to Repo
 
 on:
-  push:
-    branches:
-      - main
+  [workflow_dispatch]
 
 jobs:
   save-commit-hash:
@@ -26,7 +24,9 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
       - name: Commit and push the commit hash file
+        env:
+          PAT: ${{ secrets.ACTIONS_PAT }}
         run: |
           git add commit_hash.txt
           git commit -m "Save latest commit hash"
-          git push origin main
+          git push https://x-access-token:${PAT}@github.com/${{ github.repository }} HEAD:main
