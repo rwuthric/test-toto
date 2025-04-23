@@ -1,11 +1,7 @@
 name: Save Commit Hash to Repo
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'commit_hash.txt'
+  workflow_dispatch:
 
 jobs:
   save-commit-hash:
