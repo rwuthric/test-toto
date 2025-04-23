@@ -37,12 +37,6 @@ jobs:
           cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
           make -j$(nproc)
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: geco-opcua-server
-          path: geco_build/
-
       - name: Upload open62541 shared library
         uses: actions/upload-artifact@v4
         with:
