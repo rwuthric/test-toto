@@ -37,13 +37,6 @@ jobs:
           cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
           make -j$(nproc)
 
-      - name: Build Geco OPC UA Server (Assumes CMake)
-        run: |
-          mkdir -p geco_build
-          cd geco_build
-          cmake .. -DUA_SHARED_LIB_DIR=$GITHUB_WORKSPACE/open62541/build
-          make -j$(nproc)
-
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
