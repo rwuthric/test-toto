@@ -4,43 +4,39 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-armv7:
+  build-arm:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Geco OPC UA repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install dependencies and cross-compiler
         run: |
           sudo apt-get update
-          sudo apt-get install -y git build-essential pkg-config cmake gcc-arm-linux-gnueabihf
+          sudo apt-get install -y git build-essential pkg-config cmake gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf
 
       - name: Clone open62541 and checkout specific commit
         run: |
-          # Notes:
           # Workaround for issue #6765: use commit 2babcfc
           git clone https://github.com/open62541/open62541.git
           cd open62541
           git checkout 2babcfc
           git submodule update --init --recursive
 
-      - name: Configure and cross-compile open62541 for ARMv7
+      - name: Cross-compile open62541 for ARM using toolchain
         run: |
           cd open62541
           mkdir build-arm
           cd build-arm
-          cmake \
-            -DBUILD_SHARED_LIBS=ON \
-            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-            -DCMAKE_SYSTEM_NAME=Linux \
-            -DCMAKE_SYSTEM_PROCESSOR=arm \
-            -DCMAKE_C_COMPILER=arm-linux-gnueabihf-gcc \
-            ..
+          cmake -DBUILD_SHARED_LIBS=ON \
+                -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+                -DCMAKE_TOOLCHAIN_FILE=../../cmake/toolchain-rpi.cmake \
+                ..
           make -j$(nproc)
 
-      - name: Upload ARM shared library
+      - name: Upload Raspberry Pi shared library
         uses: actions/upload-artifact@v4
         with:
           name: open62541-shared-lib-armv7
-          path: open62541/build-arm/bin/libopen62541.so
+          path: open62541/build-arm/bin
