@@ -1,0 +1,57 @@
+name: Build open62541 shared libray
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Geco OPC UA repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git build-essential gcc pkg-config cmake python
+
+      - name: Clone open62541 and checkout specific commit
+        run: |
+          # Notes:
+          # As of now, there is an open issue (#6765) that prevents the latest version of open62541
+          # from being fully compatible with C++ projects. To work around this issue, use the version
+          # from commit 2babcfc. To retrieve that specific commit:
+          #
+          # git checkout 2babcfc
+          git clone https://github.com/open62541/open62541.git
+          cd open62541
+          git checkout 2babcfc
+          git submodule update --init --recursive
+
+      - name: Configure and build open62541 (Shared Library)
+        run: |
+          cd open62541
+          mkdir build
+          cd build
+          cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+          make -j$(nproc)
+
+      - name: Build Geco OPC UA Server (Assumes CMake)
+        run: |
+          mkdir -p geco_build
+          cd geco_build
+          cmake .. -DUA_SHARED_LIB_DIR=$GITHUB_WORKSPACE/open62541/build
+          make -j$(nproc)
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: geco-opcua-server
+          path: geco_build/
+
+      - name: Upload open62541 shared library
+        uses: actions/upload-artifact@v4
+        with:
+          name: open62541-shared-lib
+          path: open62541/build/bin/libopen62541.so
