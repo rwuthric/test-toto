@@ -14,7 +14,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git build-essential gcc pkg-config cmake python
+          sudo apt-get install -y git build-essential gcc pkg-config cmake
 
       - name: Clone open62541 and checkout specific commit
         run: |
